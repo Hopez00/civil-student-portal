@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Access | Civil Engineering Dept</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+            --card-bg: #f8fafc;
+            --primary-blue: #1d4ed8;
+            --btn-gradient: linear-gradient(135deg, #2563eb, #1d4ed8);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 15px;
+        }
+
+        .auth-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 440px;
+            padding: 35px 28px;
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+            text-align: center;
+        }
+
+        .avatar-circle {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 12px auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+            overflow: hidden;
+            padding: 6px;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .portal-sub {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #2563eb;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .auth-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .forgot-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.78rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper input, .input-wrapper select {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper input:focus, .input-wrapper select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 25px;
+            background: var(--btn-gradient);
+            color: #ffffff;
+            font-size: 0.98rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-submit:active { transform: scale(0.98); }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 18px 0;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #cbd5e1;
+        }
+
+        .divider span { padding: 0 10px; }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .toggle-text {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+        }
+
+        .toggle-text a {
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-card { display: none; }
+        .auth-card.active { display: block; }
+
+        .status-msg { margin-top: 10px; font-size: 0.82rem; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="avatar-circle">
+            <img src="/logo.png" alt="ACES Logo">
+        </div>
+        <p class="portal-sub">Dept of Civil Engineering</p>
+
+        <!-- STUDENT REGISTRATION FORM (SIGN UP) -->
+        <div id="signupCard" class="auth-card active">
+            <h2 class="auth-header">Sign Up</h2>
+            <form id="registerForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="name" placeholder="Surname First, e.g. Robert, Hope" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Registration Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" name="reg_number" placeholder="e.g. AKP/ENG/CEC/HND2025/186" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="Enter valid email" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" name="phone" placeholder="e.g. 08012345678" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Level</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-graduation-cap"></i>
+                        <select name="level" required>
+                            <option value="">Select Level</option>
+                            <option value="ND1">ND1</option>
+                            <option value="ND2">ND2</option>
+                            <option value="HND1">HND1</option>
+                            <option value="HND2">HND2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Passport Photograph</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" name="passport" accept="image/*" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Complete Registration</button>
+            </form>
+
+            <div class="divider"><span>or continue with</span></div>
+            <div class="social-buttons">
+                <div class="social-btn"><i class="fab fa-google" style="color:#ea4335"></i></div>
+                <div class="social-btn"><i class="fab fa-facebook-f" style="color:#1877f2"></i></div>
+            </div>
+
+            <p class="toggle-text">Already registered? <a onclick="toggleForm('login')">Log In &gt;</a></p>
+            <div id="signupMsg" class="status-msg"></div>
+        </div>
+
+        <!-- STUDENT LOGIN FORM -->
+        <div id="loginCard" class="auth-card">
+            <h2 class="auth-header">Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Registration Number <a href="#" class="forgot-link">Forgot Reg No?</a></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" placeholder="Enter Reg Number" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password / PIN</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Enter password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Log In</button>
+            </form>
+
+            <div class="divider"><span>or continue with</span></div>
+            <div class="social-buttons">
+                <div class="social-btn"><i class="fab fa-google" style="color:#ea4335"></i></div>
+                <div class="social-btn"><i class="fab fa-facebook-f" style="color:#1877f2"></i></div>
+            </div>
+
+            <p class="toggle-text">Not registered yet? <a onclick="toggleForm('signup')">Sign Up &gt;</a></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm(type) {
+            document.getElementById('signupCard').classList.toggle('active', type === 'signup');
+            document.getElementById('loginCard').classList.toggle('active', type === 'login');
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msgDiv = document.getElementById('signupMsg');
+            msgDiv.style.color = '#2563eb';
+            msgDiv.innerText = 'Submitting registration...';
+
+            const formData = new FormData(e.target);
+            try {
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+                if (result.success) {
+                    msgDiv.style.color = '#16a34a';
+                    msgDiv.innerText = 'Registration Successful!';
+                    e.target.reset();
+                } else {
+                    msgDiv.style.color = '#dc2626';
+                    msgDiv.innerText = result.error || 'Registration failed.';
+                }
+            } catch (err) {
+                msgDiv.style.color = '#dc2626';
+                msgDiv.innerText = 'Network connection error.';
+            }
+        });
+    </script>
+</body>
+</html>

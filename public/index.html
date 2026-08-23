@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACES Portal | Dept of Civil Engineering</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-navy: #06101E;
+            --accent-blue: #0066FF;
+            --text-dark: #0F172A;
+            --text-muted: #475569;
+            --border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        body {
+            background-color: #030712;
+            color: #FFFFFF;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .hero-bg-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: -5%; left: -5%;
+            width: 110%; height: 110%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            animation: panZoom 16s ease-in-out infinite alternate;
+        }
+
+        .hero-slide.active { opacity: 0.85; }
+
+        .hero-slide:nth-child(1) { background-image: url('bg1.jpg'); }
+        .hero-slide:nth-child(2) { background-image: url('bg2.jpg'); }
+        .hero-slide:nth-child(3) { background-image: url('bg3.jpg'); }
+        .hero-slide:nth-child(4) { background-image: url('bg4.jpg'); }
+
+        @keyframes panZoom {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(-10px, -15px); }
+            100% { transform: scale(1.18) translate(10px, 10px); }
+        }
+
+        .cyber-grid-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(6, 16, 30, 0.4) 0%, rgba(6, 16, 30, 0.75) 100%);
+            z-index: 1;
+        }
+
+        .app-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .dept-header {
+            width: 100%;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 20px 15px 15px 15px;
+        }
+
+        .header-logo {
+            width: 65px; height: 65px;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.8));
+        }
+
+        .dept-title { font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .school-sub { font-size: 0.85rem; color: #CBD5E1; font-style: italic; margin-bottom: 12px; }
+
+        .nav-buttons {
+            display: flex; justify-content: center; gap: 8px;
+            max-width: 500px; margin: 0 auto;
+        }
+
+        .nav-btn {
+            flex: 1; padding: 10px 6px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(10, 25, 47, 0.7);
+            color: #FFFFFF; font-size: 0.82rem; font-weight: 600;
+            text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn.active {
+            background: var(--accent-blue);
+            border-color: #00F2FE;
+            box-shadow: 0 0 15px rgba(0, 102, 255, 0.6);
+        }
+
+        .main-container {
+            width: 100%; max-width: 480px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px 24px 0 0;
+            padding: 25px 20px 40px 20px;
+            flex-grow: 1;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+        }
+
+        .portal-banner { text-align: center; margin-bottom: 18px; }
+        .aces-logo-img { width: 75px; height: 75px; margin-bottom: 6px; }
+        .portal-banner h2 { font-size: 1.3rem; color: #FFFFFF; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
+
+        .motto-badge {
+            display: inline-block; background: rgba(0, 102, 255, 0.8); color: #FFFFFF;
+            font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px;
+            margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .step-indicator {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 22px; position: relative; padding: 0 10px;
+        }
+
+        .step-indicator::before {
+            content: ''; position: absolute; top: 50%; left: 20px; right: 20px;
+            height: 2px; background: rgba(255, 255, 255, 0.3); z-index: 1; transform: translateY(-50%);
+        }
+
+        .step-dot {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(15, 23, 42, 0.7); border: 2px solid rgba(255, 255, 255, 0.4);
+            color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem; position: relative; z-index: 2;
+        }
+
+        .step-dot.active {
+            background: var(--accent-blue); border-color: #00F2FE;
+            color: #FFFFFF; box-shadow: 0 0 12px rgba(0, 102, 255, 0.8);
+        }
+
+        .step-dot.completed { background: #16A34A; border-color: #16A34A; color: #FFFFFF; }
+
+        .step-panel { display: none; }
+        .step-panel.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-title {
+            font-size: 0.95rem; font-weight: 700; color: #FFFFFF;
+            margin-bottom: 12px; border-bottom: 2px solid #00F2FE;
+            padding-bottom: 4px; display: inline-block; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #FFFFFF; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper i { position: absolute; left: 12px; color: #0066FF; font-size: 0.85rem; z-index: 3; }
+
+        .input-wrapper input, .input-wrapper select {
+            width: 100%; padding: 10px 12px 10px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 8px;
+            background: rgba(255, 255, 255, 0.92); font-size: 0.88rem; color: #000000; outline: none;
+            font-weight: 600;
+        }
+
+        .input-wrapper input:focus, .input-wrapper select:focus {
+            border-color: #0066FF; box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.3);
+        }
+
+        .btn-group { display: flex; gap: 8px; margin-top: 18px; }
+        .btn-step {
+            flex: 1; padding: 11px; border: none; border-radius: 8px;
+            font-size: 0.88rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+
+        .btn-prev { background: rgba(226, 232, 240, 0.85); color: #0F172A; }
+        .btn-next, .btn-submit { background: var(--accent-blue); color: #FFFFFF; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4); }
+
+        .partner-card {
+            background: rgba(6, 16, 30, 0.85); color: #FFFFFF; border-radius: 12px;
+            padding: 16px; margin-top: 22px; border: 1.5px solid #FACC15; text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .partner-badge {
+            background: #FACC15; color: #000; font-size: 0.65rem; font-weight: 800;
+            padding: 3px 8px; border-radius: 4px; text-transform: uppercase; display: inline-block; margin-bottom: 6px;
+        }
+
+        .partner-title { font-size: 0.95rem; font-weight: 800; margin-bottom: 4px; }
+        .partner-desc { font-size: 0.78rem; color: #CBD5E1; margin-bottom: 10px; }
+        .partner-contact { font-size: 0.8rem; display: flex; flex-direction: column; gap: 3px; }
+        .status-msg { margin-top: 12px; font-size: 0.85rem; text-align: center; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="hero-bg-container">
+        <div class="hero-slide active"></div>
+        <div class="hero-slide"></div>
+        <div class="hero-slide"></div>
+        <div class="hero-slide"></div>
+        <div class="cyber-grid-overlay"></div>
+    </div>
+
+    <div class="app-content">
+        <header class="dept-header">
+            <img src="logo.png" alt="ACES Crest" class="header-logo" onerror="this.style.display='none'">
+            <h1 class="dept-title">Dept of Civil Engineering</h1>
+            <p class="school-sub">Akwa Ibom State Polytechnic</p>
+            <div class="nav-buttons">
+                <a href="/" class="nav-btn active"><i class="fas fa-user-plus"></i> Register</a>
+                <a href="/admin.html" class="nav-btn"><i class="fas fa-database"></i> Admin Portal</a>
+                <a href="https://wa.me/2348143188522" class="nav-btn"><i class="fab fa-whatsapp"></i> Helpdesk</a>
+            </div>
+        </header>
+
+        <main class="main-container">
+            <div class="portal-banner">
+                <img src="logo.png" alt="ACES Logo" class="aces-logo-img" onerror="this.style.display='none'">
+                <h2>Student Registration Portal</h2>
+                <span class="motto-badge">ACES: Conceptualization and Technology</span>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-dot active" id="dot1">1</div>
+                <div class="step-dot" id="dot2">2</div>
+                <div class="step-dot" id="dot3">3</div>
+            </div>
+
+            <form id="multiStepForm" enctype="multipart/form-data">
+                <div class="step-panel active" id="step1">
+                    <span class="step-title">Step 1: Personal Information</span>
+                    <div class="form-group">
+                        <label>Full Name (Surname First)</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" name="name" placeholder="e.g. Robert, Hope Akpan" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Registration Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" name="reg_number" placeholder="e.g. AKP/ENG/CEC/HND2025/186" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="date" name="dob" required>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-step btn-next" onclick="nextStep(2)">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="step-panel" id="step2">
+                    <span class="step-title">Step 2: Contact Details</span>
+                    <div class="form-group">
+                        <label>Valid Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" placeholder="e.g. student@gmail.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" name="phone" placeholder="e.g. 08012345678" required>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-step btn-prev" onclick="nextStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+                        <button type="button" class="btn-step btn-next" onclick="nextStep(3)">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="step-panel" id="step3">
+                    <span class="step-title">Step 3: Academic & Document Upload</span>
+                    <div class="form-group">
+                        <label>Program Level</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-graduation-cap"></i>
+                            <select name="level" required>
+                                <option value="">Select Level</option>
+                                <option value="ND1">ND1</option>
+                                <option value="ND2">ND2</option>
+                                <option value="HND1">HND1</option>
+                                <option value="HND2">HND2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>HND Course / Specialization Option</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-drafting-compass"></i>
+                            <input type="text" name="course" placeholder="e.g. Structures / Transportation / Water">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Passport Photograph</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-camera"></i>
+                            <input type="file" name="passport" accept="image/*" required>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-step btn-prev" onclick="nextStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+                        <button type="submit" class="btn-step btn-submit"><i class="fas fa-paper-plane"></i> Submit Registration</button>
+                    </div>
+                </div>
+            </form>
+
+            <div id="statusMessage" class="status-msg"></div>
+
+            <div class="partner-card">
+                <span class="partner-badge">Official Service Partner</span>
+                <h3 class="partner-title">HOPEKONCEPT AND DESIGNS</h3>
+                <p class="partner-desc">Screening Forms, Admission Printing & Graphic Design</p>
+                <div class="partner-contact">
+                    <div><i class="fas fa-map-marker-alt" style="color:#FACC15"></i> Shop No. 10, Akwapoly Shopping Mall</div>
+                    <div><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp: 08143188522</div>
+                    <div><i class="fas fa-phone-alt" style="color:#3B82F6"></i> Call: 07080039503</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.hero-slide');
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 3500);
+
+        function nextStep(stepNumber) {
+            document.querySelectorAll('.step-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById('step' + stepNumber).classList.add('active');
+
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById('dot' + i);
+                if (i < stepNumber) {
+                    dot.className = 'step-dot completed';
+                } else if (i === stepNumber) {
+                    dot.className = 'step-dot active';
+                } else {
+                    dot.className = 'step-dot';
+                }
+            }
+        }
+
+        document.getElementById('multiStepForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msgDiv = document.getElementById('statusMessage');
+            msgDiv.style.color = '#00F2FE';
+            msgDiv.innerText = 'Submitting registration...';
+
+            const formData = new FormData(e.target);
+            try {
+                const res = await fetch('/register', { method: 'POST', body: formData });
+                const result = await res.json();
+                if (result.success) {
+                    msgDiv.style.color = '#4ADE80';
+                    msgDiv.innerText = 'Registration Successful!';
+                    e.target.reset();
+                    nextStep(1);
+                } else {
+                    msgDiv.style.color = '#F87171';
+                    msgDiv.innerText = result.error || 'Registration failed.';
+                }
+            } catch (err) {
+                msgDiv.style.color = '#F87171';
+                msgDiv.innerText = 'Network connection error.';
+            }
+        });
+    </script>
+</body>
+</html>
