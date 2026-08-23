@@ -69,40 +69,44 @@ app.get('/', (req, res) => {
 });
     
 app.post('/register', upload.single('passport'), (req, res) => {
-  const { name, reg_number, dob, email, phone, level, course } = req.body;
-  const passport_path = req.file ? `/uploads/${req.file.filename}` : '';
+    const { name, reg_number, dob, email, phone, level, course } = req.body;
+    const passport_path = req.file ? `/uploads/${req.file.filename}` : '';
 
-  const query = `INSERT INTO students (name, reg_number, dob, email, phone, level, course, passport_path) 
-                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
-  
-  pool.query(query, [name, reg_number, dob, email, phone, level, course, passport_path], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ success: false, error: err.message });
-    }
+    const query = `INSERT INTO students (name, reg_number, dob, email, phone, level, course, passport_path)
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
 
-    const mailOptions = {
-      from: '"ACES Civil Engineering Portal" <idrobert123456@gmail.com>',
-      to: email,
-      cc: 'idrobert123456@gmail.com',
-      subject: 'Registration Confirmation - Department of Civil Engineering',
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background: #051011; color: #fff;">
-          <h2 style="color: #400F2E;">Registration Successful</h2>
-          <p>Dear <b>${name}</b>,</p>
-          <p>Your student registration for the Akwa Ibom State Polytechnic Department of Civil Engineering has been successfully received.</p>
-          <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2);">
-          <p><b>Registration Number:</b> ${reg_number}</p>
-        </div>
-      `
-    };
+    pool.query(query, [name, reg_number, dob, email, phone, level, course, passport_path], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, error: err.message });
+        }
 
-    transporter.sendMail(mailOptions, (mailErr) => {
-      if (mailErr) console.log(mailErr);
-      res.json({ success: true });
+        // Send success response immediately so frontend completes instantly
+        res.json({ success: true });
+
+        // Send email in the background
+        const mailOptions = {
+            from: '"ACES Civil Engineering Portal" <idrobert123456@gmail.com>',
+            to: email,
+            cc: 'idrobert123456@gmail.com',
+            subject: 'Registration Confirmation - Department of Civil Engineering',
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px; background: #051011; color: #fff;">
+                    <h2 style="color: #400F2E;">Registration Successful</h2>
+                    <p>Dear <b>${name}</b>,</p>
+                    <p>Your student registration for the Akwa Ibom State Polytechnic Department of Civil Engineering has been successfully recorded.</p>
+                    <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2);">
+                    <p><b>Registration Number:</b> ${reg_number}</p>
+                </div>
+            `
+        };
+
+        transporter.sendMail(mailOptions, (mailErr) => {
+            if (mailErr) console.log('Mail error:', mailErr);
+        });
     });
-  });
 });
+          
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
