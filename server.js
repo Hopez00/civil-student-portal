@@ -62,7 +62,14 @@ const transporter = nodemailer.createTransport({
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+    
 app.post('/register', upload.single('passport'), (req, res) => {
   const { name, reg_number, dob, email, phone, level, course } = req.body;
   const passport_path = req.file ? `/uploads/${req.file.filename}` : '';
