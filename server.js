@@ -42,12 +42,17 @@ pool.query(`
 const upload = multer({ storage: multer.memoryStorage() });
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'idrobert123456@gmail.com',
-        pass: 'nghvnjdwjjvrrvjag'
-    }
+  service: 'gmail',
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
+
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
