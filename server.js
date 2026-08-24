@@ -117,20 +117,13 @@ app.post('/register', upload.single('passport'), async (req, res) => {
       reqMail.write(data);
       reqMail.end();
     }
-
-  } catch (err) {
-    console.error('SERVER FATAL ERROR:', err);
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-          
-    } catch (err) {
-        console.error('SERVER FATAL ERROR:', err);
-        const errorDetails = err.message || JSON.stringify(err) || err.toString();
-        res.status(200).json({ success: false, error: errorDetails });
-    }
+} catch (err) {
+  console.error('SERVER FATAL ERROR:', err);
+  res.status(500).json({ success: false, error: err.message });
+}
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
+    
