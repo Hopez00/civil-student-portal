@@ -7,9 +7,19 @@ const nodemailer = require('nodemailer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// PostgreSQL connection pool using environment variables
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
+});
+
+// Test database connectivity on startup
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+        console.error('DATABASE CONNECTION FAILED (ECONNREFUSED/AUTH):', err.message);
+    } else {
+        console.log('Connected to Supabase PostgreSQL successfully!');
+    }
 });
 
 // Verify table creation
@@ -63,7 +73,7 @@ app.post('/register', upload.single('passport'), async (req, res) => {
         // Save to database
         await pool.query(query, values);
         
-        // Respond success immediately so the user doesn't wait on email servers
+        // Respond success immediately
         res.json({ success: true });
 
         // Try sending email safely in background
@@ -81,7 +91,6 @@ app.post('/register', upload.single('passport'), async (req, res) => {
         }
     } catch (err) {
         console.error('SERVER FATAL ERROR:', err);
-        // Force outputting the exact error string or JSON so it displays on screen
         const errorDetails = err.message || JSON.stringify(err) || err.toString();
         res.status(200).json({ success: false, error: errorDetails });
     }
