@@ -60,22 +60,30 @@ app.post('/register', upload.single('passport'), async (req, res) => {
         const query = `INSERT INTO students (name, reg_number, dob, email, phone, level, course, passport_path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
         const values = [name || '', reg_number || '', dob || '', email || '', phone || '', level || '', course || '', passport_path || ''];
 
+        // Save to database
         await pool.query(query, values);
+        
+        // Respond success immediately so the user doesn't wait on email servers
         res.json({ success: true });
 
+        // Try sending email safely in background
         if (email) {
-            const mailOptions = {
-                from: '"ACES Civil Portal" <idrobert123456@gmail.com>',
-                to: email,
-                subject: 'Registration Successful',
-                text: `Hello ${name}, your registration number is ${reg_number}.`
-            };
-            transporter.sendMail(mailOptions, () => {});
+            try {
+                await transporter.sendMail({
+                    from: '"ACES Civil Portal" <idrobert123456@gmail.com>',
+                    to: email,
+                    subject: 'Registration Successful',
+                    text: `Hello ${name}, your registration for Akwa Ibom State Polytechnic Dept of Civil Engineering has been received successfully.`
+                });
+            } catch (mailErr) {
+                console.log('Background email error (non-fatal):', mailErr.message);
+            }
         }
     } catch (err) {
-        console.error('SERVER ERROR:', err);
-        // Explicitly send the exact error message back so we can see it on the screen!
-        res.status(200).json({ success: false, error: err.message });
+        console.error('SERVER FATAL ERROR:', err);
+        // Force outputting the exact error string or JSON so it displays on screen
+        const errorDetails = err.message || JSON.stringify(err) || err.toString();
+        res.status(200).json({ success: false, error: errorDetails });
     }
 });
 
