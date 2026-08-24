@@ -392,12 +392,15 @@
                     msgDiv.innerText = 'Registration Successful!';
                     e.target.reset();
                     nextStep(1);
-                    } else {
+                            } else {
+            msgDiv.style.color = '#F87171';
+            msgDiv.innerText = result.error || 'Registration failed.';
+        }
+    } catch (err) {
         msgDiv.style.color = '#F87171';
-        msgDiv.innerText = result.error || 'Registration failed.';
-    }
-
-            } catch (err) {
+        msgDiv.innerText = 'Network connection error.';
+        }
+        
                 msgDiv.style.color = '#F87171';
                 msgDiv.innerText = 'Network connection error.';
             }
