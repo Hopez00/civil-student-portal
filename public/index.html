@@ -211,7 +211,7 @@
         .partner-title { font-size: 0.95rem; font-weight: 800; margin-bottom: 4px; }
         .partner-desc { font-size: 0.7rem; color: #EBD5C1; margin-bottom: 10px; }
         .partner-contact { font-size: 0.8rem; display: flex; flex-direction: column; gap: 3px; }
-        .status-msg { margin-top: 12px; font-size: 0.85rem; text-align: center; font-weight: 600; }
+        .status-msg { margin-top: 12px; font-size: 0.85rem; text-align: center; font-weight: 600; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -392,8 +392,8 @@
                 let result;
                 try {
                     result = JSON.parse(text);
-                } catch (e) {
-                    throw new Error("Server returned non-JSON: " + text);
+                } catch (parseErr) {
+                    throw new Error("Raw Server Output: " + text);
                 }
 
                 if (result.success) {
@@ -403,13 +403,14 @@
                     nextStep(1);
                 } else {
                     msgDiv.style.color = '#F87171';
-                    msgDiv.innerText = 'Error: ' + (result.error || 'Unknown server error');
+                    msgDiv.innerText = 'Server Error: ' + (result.error || 'Unknown error');
                 }
             } catch (err) {
                 msgDiv.style.color = '#F87171';
-                msgDiv.innerText = 'Failed: ' + err.message;
+                msgDiv.innerText = 'Catch Error: ' + err.message;
             }
         });
     </script>
 </body>
 </html>
+
