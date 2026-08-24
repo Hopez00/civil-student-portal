@@ -14,15 +14,12 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-pool.query('SELECT NOW()', (err, res) => {
-    if (err) {
-        console.error('Database connection error:', err.stack);
-    } else {
-        console.log('Connected to Supabase PostgreSQL successfully!');
-    }
+pool.query('SELECT NOW()', (err) => {
+    if (err) console.error('Database connection error:', err.stack);
+    else console.log('Connected to Supabase PostgreSQL successfully!');
 });
 
-// Automatically create table if it doesn't exist
+// Automatically create table with all necessary columns if it doesn't exist
 pool.query(`
     CREATE TABLE IF NOT EXISTS students (
         id SERIAL PRIMARY KEY,
@@ -76,40 +73,47 @@ app.post('/register', upload.single('passport'), async (req, res) => {
 
         const query = `INSERT INTO students (name, reg_number, dob, email, phone, level, course, passport_path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
         
-        pool.query(query, [name, reg_number, dob, email, phone, level, course, passport_path], (err, dbResult) => {
-            if (err) {
-                console.error('Database Insertion Error:', err);
-                return res.status(500).json({ success: false, error: err.message });
-            }
-            
-            // Send success response immediately
-            res.json({ success: true });
+        const values = [
+            name || '', 
+            reg_number || '', 
+            dob || '', 
+            email || '', 
+            phone || '', 
+            level || '', 
+            course || '', 
+            passport_path || ''
+        ];
 
-            // Send confirmation email in background
-            if (email) {
-                const mailOptions = {
-                    from: '"ACES Civil Engineering Portal" <idrobert123456@gmail.com>',
-                    to: email,
-                    cc: 'idrobert123456@gmail.com',
-                    subject: 'Registration Confirmation - Department of Civil Engineering',
-                    html: `
-                        <div style="font-family: Arial, sans-serif; padding: 20px; background: #051011; color: #fff;">
-                            <h2 style="color: #00F2FE;">Registration Successful!</h2>
-                            <p>Dear <b>${name}</b>,</p>
-                            <p>Your student registration for the Akwa Ibom State Polytechnic Department of Civil Engineering has been received successfully.</p>
-                            <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2);">
-                            <p><b>Registration Number:</b> ${reg_number}</p>
-                        </div>
-                    `
-                };
-                transporter.sendMail(mailOptions, (mailErr) => {
-                    if (mailErr) console.log('Mail error:', mailErr);
-                });
-            }
-        });
+        await pool.query(query, values);
+        
+        // Send success response
+        res.json({ success: true });
+
+        // Send confirmation email in background (non-blocking)
+        if (email) {
+            const mailOptions = {
+                from: '"ACES Civil Engineering Portal" <idrobert123456@gmail.com>',
+                to: email,
+                cc: 'idrobert123456@gmail.com',
+                subject: 'Registration Confirmation - Department of Civil Engineering',
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; background: #051011; color: #fff;">
+                        <h2 style="color: #00F2FE;">Registration Successful!</h2>
+                        <p>Dear <b>${name}</b>,</p>
+                        <p>Your student registration for the Akwa Ibom State Polytechnic Department of Civil Engineering has been received successfully.</p>
+                        <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <p><b>Registration Number:</b> ${reg_number}</p>
+                    </div>
+                `
+            };
+            transporter.sendMail(mailOptions, (mailErr) => {
+                if (mailErr) console.log('Mail error:', mailErr);
+            });
+        }
     } catch (err) {
-        console.error('Server Error:', err);
-        res.status(500).json({ success: false, error: err.message });
+        console.error('Server Catch Error:', err);
+        // Send the exact database or code error back to the frontend!
+        res.status(500).json({ success: false, error: err.message || err.toString() });
     }
 });
 
