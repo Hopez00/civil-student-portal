@@ -51,10 +51,57 @@
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 14px 16px; border-bottom: 1px solid #E2E8F0; font-size: 0.95rem; }
         th { background: #F8FAFC; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+        tr { cursor: pointer; }
         tr:hover { background: #F1F5F9; }
         
         .student-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
         .error-msg { color: #EF4444; font-size: 0.85rem; margin-top: 10px; }
+
+        /* Modal Styles */
+        #student-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #FFF;
+            color: var(--text-dark);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            position: relative;
+            animation: modalPop 0.2s ease-in-out;
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: #F1F5F9;
+            border: none;
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: #475569;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .close-btn:hover { background: #E2E8F0; color: #0F172A; }
+        .modal-header-info { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid #E2E8F0; padding-bottom: 20px; }
+        .modal-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-navy); }
+        .modal-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .detail-item label { display: block; font-size: 0.75rem; text-transform: uppercase; color: #64748B; font-weight: 700; margin-bottom: 3px; }
+        .detail-item p { font-size: 0.95rem; font-weight: 600; color: #1E293B; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -99,13 +146,48 @@
                             <th>Reg Number</th>
                             <th>Level</th>
                             <th>Phone</th>
-                            <th>Email</th>
                         </tr>
                     </thead>
                     <tbody id="student-table-body">
                         <!-- Populated via JS -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT DETAIL MODAL -->
+    <div id="student-modal" onclick="closeModalOutside(event)">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header-info">
+                <img id="modal-img" src="" class="modal-avatar" alt="Student Passport">
+                <div>
+                    <h3 id="modal-name" style="color: var(--primary-navy); font-size: 1.3rem; margin-bottom: 4px;"></h3>
+                    <p id="modal-reg" style="color: #64748B; font-weight: 600;"></p>
+                </div>
+            </div>
+            <div class="modal-details-grid">
+                <div class="detail-item">
+                    <label>Level</label>
+                    <p id="modal-level">-</p>
+                </div>
+                <div class="detail-item">
+                    <label>Date of Birth</label>
+                    <p id="modal-dob">-</p>
+                </div>
+                <div class="detail-item">
+                    <label>Phone Number</label>
+                    <p id="modal-phone">-</p>
+                </div>
+                <div class="detail-item">
+                    <label>Email Address</label>
+                    <p id="modal-email">-</p>
+                </div>
+                <div class="detail-item" style="grid-column: span 2;">
+                    <label>Course / Option</label>
+                    <p id="modal-course">-</p>
+                </div>
             </div>
         </div>
     </div>
@@ -159,22 +241,45 @@
             const tbody = document.getElementById('student-table-body');
             tbody.innerHTML = '';
             if (students.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px;">No students found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;">No students found.</td></tr>`;
                 return;
             }
 
-            students.forEach(s => {
+            students.forEach((s, index) => {
                 const tr = document.createElement('tr');
+                tr.onclick = () => openStudentModal(s);
                 tr.innerHTML = `
                     <td><img src="${s.passport_path || 'https://via.placeholder.com/45'}" class="student-img" alt="Photo"></td>
                     <td><strong>${s.name}</strong></td>
                     <td>${s.reg_number}</td>
                     <td>${s.level || 'HND'}</td>
                     <td>${s.phone || 'N/A'}</td>
-                    <td>${s.email || 'N/A'}</td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        function openStudentModal(student) {
+            document.getElementById('modal-img').src = student.passport_path || 'https://via.placeholder.com/80';
+            document.getElementById('modal-name').textContent = student.name;
+            document.getElementById('modal-reg').textContent = student.reg_number;
+            document.getElementById('modal-level').textContent = student.level || 'N/A';
+            document.getElementById('modal-dob').textContent = student.dob || 'N/A';
+            document.getElementById('modal-phone').textContent = student.phone || 'N/A';
+            document.getElementById('modal-email').textContent = student.email || 'N/A';
+            document.getElementById('modal-course').textContent = student.course || 'Civil Engineering';
+            
+            document.getElementById('student-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('student-modal').style.display = 'none';
+        }
+
+        function closeModalOutside(e) {
+            if (e.target.id === 'student-modal') {
+                closeModal();
+            }
         }
 
         function filterStudents() {
