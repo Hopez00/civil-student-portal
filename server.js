@@ -1,4 +1,4 @@
-const express = require('express');
+const https = require('https');
 const { Pool } = require('pg');
 const multer = require('multer');
 const path = require('path');
@@ -63,37 +63,67 @@ app.get('/', (req, res) => {
 });
 
 app.post('/register', upload.single('passport'), async (req, res) => {
-    try {
-        const { name, reg_number, dob, email, phone, level, course } = req.body;
-        
-        let passport_path = '';
-        if (req.file) {
-            const b64 = Buffer.from(req.file.buffer).toString('base64');
-            passport_path = `data:${req.file.mimetype};base64,${b64}`;
+  try {
+    const { name, reg_number, dob, email, phone, level, course } = req.body;
+
+    let passport_path = '';
+    if (req.file) {
+      const b64 = Buffer.from(req.file.buffer).toString('base64');
+      passport_path = `data:${req.file.mimetype};base64,${b64}`;
+    }
+
+    // 1. Save to database
+    const query = 'INSERT INTO students (name, reg_number, dob, email, phone, level, course, passport_path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+    const values = [name, reg_number, dob, email, phone, level, course, passport_path];
+    await pool.query(query, values);
+
+    // 2. Respond success immediately
+    res.json({ success: true });
+
+    // 3. Send email using native Node.js HTTPS request (Bypasses Render timeouts)
+    if (email) {
+      const data = JSON.stringify({
+        sender: { name: "ACES Civil Portal", email: "idrobert123456@gmail.com" },
+        to: [{ email: email, name: name }],
+        subject: "Registration Successful",
+        htmlContent: `<html><body><h3>Hello ${name},</h3><p>Your registration for Akwa Ibom State Polytechnic Dept of Civil Engineering was successful!</p></body></html>`
+      });
+
+      const options = {
+        hostname: 'api.brevo.com',
+        port: 443,
+        path: '/v3/smtp/email',
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Length': data.length
         }
+      };
 
-        const query = `INSERT INTO students (name, reg_number, dob, email, phone, level, course, passport_path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
-        const values = [name || '', reg_number || '', dob || '', email || '', phone || '', level || '', course || '', passport_path || ''];
+      const reqMail = https.request(options, (apiRes) => {
+        let responseBody = '';
+        apiRes.on('data', (chunk) => { responseBody += chunk; });
+        apiRes.on('end', () => {
+          console.log('Brevo response:', responseBody);
+        });
+      });
 
-        // Save to database
-        await pool.query(query, values);
-        
-        // Respond success immediately
-        res.json({ success: true });
+      reqMail.on('error', (error) => {
+        console.error('Background email error:', error.message);
+      });
 
-        // Try sending email safely in background
-        if (email) {
-            try {
-                await transporter.sendMail({
-                    from: '"ACES Civil Portal" <idrobert123456@gmail.com>',
-                    to: email,
-                    subject: 'Registration Successful',
-                    text: `Hello ${name}, your registration for Akwa Ibom State Polytechnic Dept of Civil Engineering has been received successfully.`
-                });
-            } catch (mailErr) {
-                console.log('Background email error (non-fatal):', mailErr.message);
-            }
-        }
+      reqMail.write(data);
+      reqMail.end();
+    }
+
+  } catch (err) {
+    console.error('SERVER FATAL ERROR:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+          
     } catch (err) {
         console.error('SERVER FATAL ERROR:', err);
         const errorDetails = err.message || JSON.stringify(err) || err.toString();
