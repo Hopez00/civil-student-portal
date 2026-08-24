@@ -7,9 +7,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-navy: #06101E;
-            --accent-blue: #0066FF;
-            --text-dark: #0F172A;
+            --primary-navy: #051011;
+            --accent-blue: #00F2FE;
+            --text-dark: #DF172A;
             --text-muted: #475569;
             --border-color: rgba(255, 255, 255, 0.3);
         }
@@ -60,7 +60,7 @@
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(6, 16, 30, 0.4) 0%, rgba(6, 16, 30, 0.75) 100%);
+            background: linear-gradient(180deg, rgba(5, 16, 17, 0.4) 0%, rgba(5, 16, 17, 0.75) 100%);
             z-index: 1;
         }
 
@@ -88,7 +88,7 @@
         }
 
         .dept-title { font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-        .school-sub { font-size: 0.85rem; color: #CBD5E1; font-style: italic; margin-bottom: 12px; }
+        .school-sub { font-size: 0.85rem; color: #EBD5C1; font-style: italic; margin-bottom: 12px; }
 
         .nav-buttons {
             display: flex; justify-content: center; gap: 8px;
@@ -96,7 +96,7 @@
         }
 
         .nav-btn {
-            flex: 1; padding: 10px 6px; border-radius: 8px;
+            flex: 1; padding: 11px 6px; border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             background: rgba(10, 25, 47, 0.7);
             color: #FFFFFF; font-size: 0.82rem; font-weight: 600;
@@ -112,7 +112,7 @@
 
         .main-container {
             width: 100%; max-width: 480px;
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(5, 16, 17, 0.35);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px 24px 0 0;
@@ -128,7 +128,7 @@
         .portal-banner h2 { font-size: 1.3rem; color: #FFFFFF; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
 
         .motto-badge {
-            display: inline-block; background: rgba(0, 102, 255, 0.8); color: #FFFFFF;
+            display: inline-block; background: rgba(0, 102, 255, 0.6); color: #FFFFFF;
             font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px;
             margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;
         }
@@ -167,25 +167,24 @@
 
         .step-title {
             font-size: 0.95rem; font-weight: 700; color: #FFFFFF;
-            margin-bottom: 12px; border-bottom: 2px solid #00F2FE;
+            margin-bottom: 12px; border-bottom: 2px solid #0066FF;
             padding-bottom: 4px; display: inline-block; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
 
         .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #FFFFFF; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #FFFFFF; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
         .input-wrapper { position: relative; display: flex; align-items: center; }
         .input-wrapper i { position: absolute; left: 12px; color: #0066FF; font-size: 0.85rem; z-index: 3; }
-
         .input-wrapper input, .input-wrapper select {
-            width: 100%; padding: 10px 12px 10px 36px;
-            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 8px;
-            background: rgba(255, 255, 255, 0.92); font-size: 0.88rem; color: #000000; outline: none;
-            font-weight: 600;
+            width: 100%; padding: 11px 12px 11px 36px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(10, 25, 47, 0.8); color: #FFFFFF;
+            font-size: 0.85rem; outline: none; backdrop-filter: blur(10px);
         }
 
         .input-wrapper input:focus, .input-wrapper select:focus {
-            border-color: #0066FF; box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.3);
+            border-color: #00F2FE; box-shadow: 0 0 3px rgba(0, 102, 255, 0.3);
         }
 
         .btn-group { display: flex; gap: 8px; margin-top: 18px; }
@@ -195,11 +194,11 @@
             display: flex; align-items: center; justify-content: center; gap: 6px;
         }
 
-        .btn-prev { background: rgba(226, 232, 240, 0.85); color: #0F172A; }
-        .btn-next, .btn-submit { background: var(--accent-blue); color: #FFFFFF; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4); }
+        .btn-prev { background: rgba(220, 232, 240, 0.85); color: #DF172A; }
+        .btn-next, .btn-submit { background: var(--accent-blue); color: #FFFFFF; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.5); }
 
         .partner-card {
-            background: rgba(6, 16, 30, 0.85); color: #FFFFFF; border-radius: 12px;
+            background: rgba(5, 16, 17, 0.85); color: #FFFFFF; border-radius: 12px;
             padding: 16px; margin-top: 22px; border: 1.5px solid #FACC15; text-align: center;
             backdrop-filter: blur(10px);
         }
@@ -210,7 +209,7 @@
         }
 
         .partner-title { font-size: 0.95rem; font-weight: 800; margin-bottom: 4px; }
-        .partner-desc { font-size: 0.78rem; color: #CBD5E1; margin-bottom: 10px; }
+        .partner-desc { font-size: 0.7rem; color: #EBD5C1; margin-bottom: 10px; }
         .partner-contact { font-size: 0.8rem; display: flex; flex-direction: column; gap: 3px; }
         .status-msg { margin-top: 12px; font-size: 0.85rem; text-align: center; font-weight: 600; }
     </style>
@@ -228,7 +227,7 @@
     <div class="app-content">
         <header class="dept-header">
             <img src="logo.png" alt="ACES Crest" class="header-logo" onerror="this.style.display='none'">
-            <h1 class="dept-title">Dept of Civil Engineering</h1>
+            <h1>Dept of Civil Engineering</h1>
             <p class="school-sub">Akwa Ibom State Polytechnic</p>
             <div class="nav-buttons">
                 <a href="/" class="nav-btn active"><i class="fas fa-user-plus"></i> Register</a>
@@ -251,6 +250,7 @@
             </div>
 
             <form id="multiStepForm" enctype="multipart/form-data">
+                <!-- Step 1 -->
                 <div class="step-panel active" id="step1">
                     <span class="step-title">Step 1: Personal Information</span>
                     <div class="form-group">
@@ -264,7 +264,7 @@
                         <label>Registration Number</label>
                         <div class="input-wrapper">
                             <i class="fas fa-id-card"></i>
-                            <input type="text" name="reg_number" placeholder="e.g. AKP/ENG/CEC/HND2025/186" required>
+                            <input type="text" name="reg_number" placeholder="e.g. AKP/ENG/CEC/HND2025/204" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -275,10 +275,11 @@
                         </div>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn-step btn-next" onclick="nextStep(2)">Next <i class="fas fa-arrow-right"></i></button>
+                        <button type="button" class="btn-step btn-next" onclick="nextStep(2)">Next &rarr;</button>
                     </div>
                 </div>
 
+                <!-- Step 2 -->
                 <div class="step-panel" id="step2">
                     <span class="step-title">Step 2: Contact Details</span>
                     <div class="form-group">
@@ -297,10 +298,11 @@
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn-step btn-prev" onclick="nextStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
-                        <button type="button" class="btn-step btn-next" onclick="nextStep(3)">Next <i class="fas fa-arrow-right"></i></button>
+                        <button type="button" class="btn-step btn-next" onclick="nextStep(3)">Next &rarr;</button>
                     </div>
                 </div>
 
+                <!-- Step 3 -->
                 <div class="step-panel" id="step3">
                     <span class="step-title">Step 3: Academic & Document Upload</span>
                     <div class="form-group">
@@ -344,9 +346,9 @@
                 <h3 class="partner-title">HOPEKONCEPT AND DESIGNS</h3>
                 <p class="partner-desc">Screening Forms, Admission Printing & Graphic Design</p>
                 <div class="partner-contact">
-                    <div><i class="fas fa-map-marker-alt" style="color:#FACC15"></i> Shop No. 10, Akwapoly Shopping Mall</div>
-                    <div><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp: 08143188522</div>
-                    <div><i class="fas fa-phone-alt" style="color:#3B82F6"></i> Call: 07080039503</div>
+                    <div><i class="fas fa-map-marker-alt" style="color: #FACC15"></i> Shop No. 10, Akwapoly Shopping Mall</div>
+                    <div><i class="fab fa-whatsapp" style="color: #25D366"></i> WhatsApp: 08143188522</div>
+                    <div><i class="fas fa-phone-alt" style="color: #38B2F6"></i> Call: 07080039503</div>
                 </div>
             </div>
         </main>
@@ -365,7 +367,7 @@
             document.querySelectorAll('.step-panel').forEach(panel => panel.classList.remove('active'));
             document.getElementById('step' + stepNumber).classList.add('active');
 
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i < 3; i++) {
                 const dot = document.getElementById('dot' + i);
                 if (i < stepNumber) {
                     dot.className = 'step-dot completed';
@@ -378,30 +380,36 @@
         }
 
         document.getElementById('multiStepForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const msgDiv = document.getElementById('statusMessage');
-    msgDiv.style.color = '#00F2FE';
-    msgDiv.innerText = 'Submitting registration...';
+            e.preventDefault();
+            const msgDiv = document.getElementById('statusMessage');
+            msgDiv.style.color = '#00F2FE';
+            msgDiv.innerText = 'Submitting registration...';
 
-    const formData = new FormData(e.target);
-    try {
-        const res = await fetch('/register', { method: 'POST', body: formData });
-        const result = await res.json();
-        if (result.success) {
-            msgDiv.style.color = '#4ADE80';
-            msgDiv.innerText = 'Registration Successful!';
-            e.target.reset();
-            nextStep(1);
-        } else {
-            msgDiv.style.color = '#F87171';
-            msgDiv.innerText = result.error || 'Registration failed.';
-        }
-    } catch (err) {
-        msgDiv.style.color = '#F87171';
-        msgDiv.innerText = 'Network connection error.';
-    }
-});
-        
+            const formData = new FormData(e.target);
+            try {
+                const res = await fetch('/register', { method: 'POST', body: formData });
+                const text = await res.text();
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (e) {
+                    throw new Error("Server returned non-JSON: " + text);
+                }
+
+                if (result.success) {
+                    msgDiv.style.color = '#4ADE80';
+                    msgDiv.innerText = 'Registration Successful!';
+                    e.target.reset();
+                    nextStep(1);
+                } else {
+                    msgDiv.style.color = '#F87171';
+                    msgDiv.innerText = 'Error: ' + (result.error || 'Unknown server error');
+                }
+            } catch (err) {
+                msgDiv.style.color = '#F87171';
+                msgDiv.innerText = 'Failed: ' + err.message;
+            }
+        });
     </script>
 </body>
 </html>
