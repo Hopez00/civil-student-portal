@@ -3,206 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal | Dept of Civil Engineering</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>ACES Admin Portal | Civil Engineering</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary-blue: #0A2540; --accent-blue: #0066FF; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: var(--primary-blue); color: #fff; min-height: 100vh; padding: 20px; }
+        :root {
+            --primary-navy: #051011;
+            --accent-blue: #00F2FE;
+            --text-dark: #0F172A;
+            --bg-glass: rgba(255, 255, 255, 0.95);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--primary-navy); color: #FFF; min-height: 100vh; padding: 20px; }
+        
         .container { max-width: 1100px; margin: 0 auto; }
-
-        /* Login Card */
-        #loginBox {
+        
+        /* Login Box Styles */
+        #login-card {
+            background: var(--bg-glass);
+            color: var(--text-dark);
             max-width: 400px;
-            margin: 80px auto;
-            background: #fff;
-            color: #333;
+            margin: 100px auto;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             text-align: center;
         }
-        #loginBox img { width: 80px; margin-bottom: 15px; }
-        #loginBox h2 { color: var(--primary-blue); margin-bottom: 20px; }
-        #loginBox input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        #loginBox button {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        #login-card h2 { margin-bottom: 20px; color: var(--primary-navy); }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 1rem; }
+        .btn { width: 100%; padding: 12px; background: var(--primary-navy); color: #FFF; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: #0b2528; }
+        .btn-danger { background: #EF4444; width: auto; padding: 10px 20px; }
+        .btn-success { background: #10B981; width: auto; padding: 10px 20px; }
 
-        /* Dashboard View */
+        /* Dashboard Styles */
         #dashboard { display: none; }
-        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; background: #fff; color: #333; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #1e293b; color: #fff; }
-        .passport-img { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
+        .dash-header h1 { font-size: 1.8rem; }
+        .actions-bar { display: flex; gap: 10px; align-items: center; }
+        
+        .stats-card { background: rgba(255,255,255,0.08); padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        
+        .search-bar { width: 100%; padding: 12px 15px; border-radius: 8px; border: none; background: rgba(255,255,255,0.9); margin-bottom: 20px; font-size: 1rem; }
+
+        .table-container { background: #FFF; color: var(--text-dark); border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 14px 16px; border-bottom: 1px solid #E2E8F0; font-size: 0.95rem; }
+        th { background: #F8FAFC; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+        tr:hover { background: #F1F5F9; }
+        
+        .student-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
+        .error-msg { color: #EF4444; font-size: 0.85rem; margin-top: 10px; }
     </style>
 </head>
 <body>
-<div class="container">
-    
-    <!-- Secure Login Form -->
-    <div id="loginBox">
-        <img src="/logo.png" alt="ACES Logo">
-        <h2>Admin Access Restricted</h2>
-        <form id="adminLoginForm">
-            <input type="password" id="adminKey" placeholder="Enter Admin Password" required>
-            <button type="submit"><i class="fas fa-lock"></i> Authorize Login</button>
-        </form>
-        <p id="loginError" style="color: red; margin-top: 10px; font-size: 0.9rem;"></p>
-    </div>
 
-    <!-- Dashboard View -->
-    <div id="dashboard">
-        <div class="header">
-            <h2>Registered Civil Students</h2>
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="searchInput" placeholder="Search name or reg no..." onkeyup="filterStudents()" style="padding: 8px 12px; border-radius: 6px; border: none; width: 220px;" />
-                <button onclick="exportToCSV()" style="background: #10b981; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">📥 Export CSV</button>
-                <button onclick="logoutAdmin()" style="background: #dc2626; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">Logout</button>
+    <div class="container">
+        <!-- LOGIN SCREEN -->
+        <div id="login-card">
+            <h2><i class="fa-solid fa-lock"></i> Admin Access</h2>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label>Admin Password</label>
+                    <input type="password" id="admin-pass" placeholder="Enter secure password" required>
+                </div>
+                <button type="submit" class="btn">Authorize Login</button>
+                <div id="login-error" class="error-msg"></div>
+            </form>
+        </div>
+
+        <!-- DASHBOARD SCREEN -->
+        <div id="dashboard">
+            <div class="dash-header">
+                <h1><i class="fa-solid fa-users-gear"></i> Registered Civil Students</h1>
+                <div class="actions-bar">
+                    <button onclick="exportCSV()" class="btn btn-success"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                    <button onclick="handleLogout()" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <span>Total Registrations</span>
+                <h2 id="total-count" style="color: var(--accent-blue);">0</h2>
+            </div>
+
+            <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search by student name or registration number..." onkeyup="filterStudents()">
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Full Name</th>
+                            <th>Reg Number</th>
+                            <th>Level</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
-        
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Photo</th>
-                        <th>Name</th>
-                        <th>Reg No</th>
-                        <th>Level</th>
-                        <th>Course</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                    </tr>
-                </thead>
-                <tbody id="studentTableBody"></tbody>
-            </table>
-        </div>
     </div>
 
-</div>
+    <script>
+        let allStudents = [];
 
-<script>
-let allStudents = [];
-const loginForm = document.getElementById('adminLoginForm');
+        async function handleLogin(e) {
+            e.preventDefault();
+            const password = document.getElementById('admin-pass').value;
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.textContent = '';
 
-if (sessionStorage.getItem('adminAuth')) {
-    loadDashboard(sessionStorage.getItem('adminAuth'));
-}
-
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const key = document.getElementById('adminKey').value;
-    loadDashboard(key);
-});
-
-async function loadDashboard(key) {
-    const errDiv = document.getElementById('loginError');
-    try {
-        const res = await fetch('/api/admin/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: key })
-        });
-        
-        const data = await res.json();
-
-        if (!data.success) {
-            errDiv.innerText = data.message || "Invalid Admin Password";
-            sessionStorage.removeItem('adminAuth');
-            return;
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('login-card').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    loadStudents();
+                } else {
+                    errorDiv.textContent = data.error || 'Incorrect password.';
+                }
+            } catch (err) {
+                errorDiv.textContent = 'Connection error. Try again.';
+            }
         }
 
-        sessionStorage.setItem('adminAuth', key);
-        document.getElementById('loginBox').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        
-        allStudents = data.students;
-        renderTable(allStudents);
+        async function loadStudents() {
+            try {
+                const res = await fetch('/api/admin/students');
+                const data = await res.json();
+                if (data.success) {
+                    allStudents = data.students;
+                    renderTable(allStudents);
+                    document.getElementById('total-count').textContent = allStudents.length;
+                } else {
+                    document.getElementById('login-card').style.display = 'block';
+                    document.getElementById('dashboard').style.display = 'none';
+                }
+            } catch (err) {
+                console.error('Failed to load students');
+            }
+        }
 
-    } catch (err) {
-        errDiv.innerText = "Connection failed.";
-        console.error(err);
-    }
-}
+        function renderTable(students) {
+            const tbody = document.getElementById('student-table-body');
+            tbody.innerHTML = '';
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px;">No students found.</td></tr>`;
+                return;
+            }
 
-function renderTable(students) {
-    const tbody = document.getElementById('studentTableBody');
-    tbody.innerHTML = '';
-    
-    if (students.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px;">No students found.</td></tr>`;
-        return;
-    }
+            students.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${s.passport_path || 'https://via.placeholder.com/45'}" class="student-img" alt="Photo"></td>
+                    <td><strong>${s.name}</strong></td>
+                    <td>${s.reg_number}</td>
+                    <td>${s.level || 'HND'}</td>
+                    <td>${s.phone || 'N/A'}</td>
+                    <td>${s.email || 'N/A'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-    students.forEach(student => {
-        tbody.innerHTML += `
-            <tr>
-                <td>${student.id}</td>
-                <td><img src="${student.passport_path}" class="passport-img" /></td>
-                <td>${student.name}</td>
-                <td>${student.reg_number}</td>
-                <td>${student.level}</td>
-                <td>${student.course || 'N/A'}</td>
-                <td>${student.email}</td>
-                <td>${student.phone}</td>
-            </tr>
-        `;
-    });
-}
+        function filterStudents() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allStudents.filter(s => 
+                s.name.toLowerCase().includes(query) || s.reg_number.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        }
 
-function filterStudents() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = allStudents.filter(s => 
-        s.name.toLowerCase().includes(query) || 
-        s.reg_number.toLowerCase().includes(query)
-    );
-    renderTable(filtered);
-}
+        async function handleLogout() {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            location.reload();
+        }
 
-function exportToCSV() {
-    if (allStudents.length === 0) {
-        alert("No data available to export.");
-        return;
-    }
-
-    let csvContent = "data:text/csv;charset=utf-8,ID,Name,Reg Number,Level,Course,Email,Phone\n";
-    
-    allStudents.forEach(s => {
-        let row = [s.id, `"${s.name}"`, s.reg_number, s.level, `"${s.course || 'N/A'}"`, s.email, s.phone];
-        csvContent += row.join(",") + "\n";
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "Civil_Engineering_Students.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-function logoutAdmin() {
-    sessionStorage.removeItem('adminAuth');
-    location.reload();
-}
-</script>
+        function exportCSV() {
+            window.location.href = '/api/admin/export-csv';
+        }
+    </script>
 </body>
 </html>
